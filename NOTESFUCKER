@@ -1,0 +1,138 @@
+PAXOS
+only a value that has been proposed van be chosen.
+only a single valyue is chosen, and...
+a process never learns a value has been chosen unless it actually has been.
+
+3 classes of agents:
+Proposers
+Acceptors
+Agents
+
+(a single process could act as more than one agent. for some reason we don't care.)
+
+Agents communicate with each other by sending messages.
+
+Agents must be able to fail and remember some information upon restart.
+Messages can take a long time, or can be duplicated or lost, but never corrupted.
+
+Choosing a Value
+
+proposer.send_prop(acceptors)
+
+^ the proposer sends a proposal to the set of acceptors.
+  the value is chosen when a large enough set of acceptors have chosen it.
+  What is a large enough set?
+
+P0. To ensure that only a single value is chosen, we can let a large
+enough set consist of any majority of the agents. 
+P1. An acceptor must accept the first number it recieves.
+
+PROBLEM WITH P1:
+What if we have 2 acceptors and they both recieve different values at about the same time from different proposers?
+It seems that acceptors must be able to recieve two different values (one from each proposer, or whatever--there's two live messages being 'broadcast')
+"P1 and the requirement that a value is chosen only when it is accepted
+by a majority of acceptors imply that an acceptor must be allowed to accept
+more than one proposal." -- Paxos Made Simple
+
+We have to keep track of proposals, so we assign a unique natural number to each proposal. This will require a system that numbers props and keeps track of them... or gossip?
+
+P2. If a proposal with value v is chosen, then every higher-numbered proposal that is chosen has value v.
+
+P2a
+. If a proposal with value v is chosen, then every higher-numbered proposal accepted by any acceptor has value v.
+
+P2b
+. If a proposal with value v is chosen, then every higher-numbered proposal issued by any proposer has value v.
+
+(INVARIANT SHIT INCOMING)
+P2c
+. For any v and n, if a proposal with value v and number n is issued,
+then there is a set S consisting of a majority of acceptors such that
+either (a) no acceptor in S has accepted any proposal numbered less
+than n, or (b) v is the value of the highest-numbered proposal among
+all proposals numbered less than n accepted by the acceptors in S.
+
+What the literal fuck read that more times.
+
+"We can therefore satisfy P2b by maintaining the invariance of P2c." <-- dwell (wikipidea search) on these words, young padawan.
+
+Maintaining the Invariance of P2c
+Proposers that want to issue a proposal numbered n must learn the highest number proposal which is less than n and has been accepted by any of the acceptors.
+
+Thus we define the PREPARE request with number n:
+
+1. A proposer sends a PREPARE request to a set of acceptors, containing a prop number n.
+   The proposer expects a response that has a. a promise to never again accept a message numbered < n
+                                         b. the proposal with the highest number < n it has accepted, if any
+
+
+2. "If the proposer receives the requested responses from a majority of
+the acceptors, then it can issue a proposal with number n and value
+v, where v is the value of the highest-numbered proposal among the
+responses, or is any value selected by the proposer if the responders
+reported no proposals."
+
+It seems a new value can only be inserted if the responders reported no proposals.
+
+Now, the ACCEPT request:
+
+P1a
+. An acceptor can accept a proposal numbered n iﬀ it has not responded
+to a prepare request having a number greater than n.
+
+P1a subsumes P1 (that an acceptor must accept the first proposal it recieves)
+
+The above notes outline the algorithm for PAXOS. But...
+
+ONE SMALL OPTIMIZATION
+If an acceptor recieves a prepare request numbered n, but has already responded to a prepare request numbered greater than n,
+then we know that we have already promised to not accept any proposals less than n, so we can ignore these proposals.
+We can also safely ignore duplicate prepare requests.
+
+Acceptors, thus, must only persist the highest numbered PROPOSAL it has ever ACCEPTED and the highest numbered PREPARE request to which it has responded.
+This information must be remembered if the acceptor fails and restarts.
+
+PHASE View
+This algo has two phases:
+
+1. 
+  a. A PROPOSER selects a proposal number n and sends a PREPARE request with number n to a majority of acceptors
+  b. If an acceptor recieves a PREPARE request with number n > any prior recieved PREPARE requests to which it has been responded then
+       the acceptor responds to the PREPARE request with a PROMISE not to accept any more PROPOSALS numbered less than n AND with the highest numbered proposal (if any) that has been accepted.
+
+2.
+  a. If the proposer recieves a response to its PREPARE requests numbered n from a majority of acceptors,
+     then it sends an ACCEPT request to each of those acceptors for a PROPOSAL numbered n with a value v, where v is the value of the highest numbered proposal among the responses, or is any value if the responses reported no proposals.
+  b. If a acceptor recieves an ACCEPT request numbered n, it will accept that request unless
+     it has already responded to a PREPARE request numbered > n.
+
+  BIKE SHEDDING TIP: "It is probably a good idea to abandon a proposal if some
+  proposer has begun trying to issue a higher-numbered one. Therefore, if an
+  acceptor ignores a prepare or accept request because it has already received
+  a prepare request with a higher number, then it should probably inform
+  the proposer, who should then abandon its proposal. This is a performance
+  optimization that does not aﬀect correctness."
+
+
+THE IMPLEMENTATION
+Paxos Consensus Algorithm is outlined above, "All that remains is to describe the mechanism for guaranteeing that no
+two proposals are ever issued with the same number."
+
+
+Clients ----> Server (state machine)
+
+One server could fail though, so we replicate the exact same state machine accross multiple servers (a ring of vnodes.... shhhh, too soon...)
+
+Clients ----> Servers (replica state machines)
+
+Normal Operation:
+  1. single server is chosen as the LEADER (the distinguished proposer)
+  2. 
+
+
+class Acceptor
+def on_active
+    self.accept_first_prop();
+end
+
+

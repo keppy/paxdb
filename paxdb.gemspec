@@ -11,4 +11,5 @@ Gem::Specification.new do |s|
 		         'http://graphsockets.com'
 		       s.license     = 'MIT'
 		       s.add_dependency('leveldb-ruby', '>=0.15')
+		       s.add_dependency('ingramj-bitarray', '>=0.51')
 end
