@@ -1,2 +1,2 @@
 require 'leveldb-ruby'
-require 'tsort
+require 'tsort'
