@@ -15,6 +15,10 @@
 
 (def uni-start (char 0))
 
+(def delim-regex
+  "produce the proper delimiter regex from uni-start"
+  (re-pattern (str uni-start)))
+
 (def db
   (l/create-db
    (str "/tmp/clojurecharacters")
@@ -44,10 +48,6 @@
     (l/put db
            (namespaced-key namespace (first x))
            (last x))))
-
-(def delim-regex
-  "produce the proper delimiter regex from uni-start"
-  (re-pattern (str uni-start)))
 
 (defn get-namespaced-pairs
   "get all the pairs of a given namespace"
