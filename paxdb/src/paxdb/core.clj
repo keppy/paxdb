@@ -1,4 +1,6 @@
-(ns paxdb.core)
+(ns paxdb.core
+  (:use paxdb.graph)
+  (:use paxdb.persist))
 
 (defn push-message
   "pushes messages onto a broadcaster, using a perscribed scale for ordering"
@@ -11,7 +13,9 @@
   (sorted-map messages))
 
 (defmacro broadcaster
+  [messages]
   "creates or finds the correct broadcast channel for these messages")
 
 (defn choose
+  [messages meta]
   "chose the right broadcaster to send the message to")
