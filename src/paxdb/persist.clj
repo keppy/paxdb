@@ -19,6 +19,10 @@
   "produce the proper delimiter regex from uni-start"
   (re-pattern (str uni-start)))
 
+(def namespace-regex
+  "regex for matching the namespace and delimiter"
+  (re-pattern (str "^[A-Za-z0-9]+" uni-start)))
+
 (def db
   (l/create-db
    (str "/tmp/clojurecharacters")
@@ -36,10 +40,22 @@
   [namespace k]
   (str namespace uni-start k))
 
+(defn strip-namespace
+  "strips the namespace data from a key"
+  [k]
+  (clojure.string/replace k namespace-regex ""))
+
 (defn first-key
   "the first possible key within a namespace"
   [namespace]
   (str namespace uni-start))
+
+(defn store-pair
+  "store a single k/v pair in a given namespace"
+  [namespace p]
+  (l/put db
+         (namespaced-key namespace (first p))
+         (last p)))
 
 (defn store-pairs
   "store the k/v pairs in a given namespace"

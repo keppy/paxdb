@@ -18,22 +18,32 @@
   "regex to get the weights from a group of edges"
   (re-pattern "[a-z]"))
 
-(defn deref-edges
-  "dereference the encoded edge string into k-v pairs"
+(defn decode-edges
+  "get k-v pairs from encoded edges string"
   [edges]
   (let [labels (remove empty? (clojure.string/split edges label-regex))
         weights (remove empty? (clojure.string/split edges weight-regex))]
-    (map vector labels weights)))
+    (zipmap labels weights)))
 
-(defn memorize-nodes
+(defn decode-node
+  "get node map with node name as key and an edges hash as the val"
+  [node]
+  (hash-map (strip-namespace (first node)) (decode-edges (last node))))
+
+(defn memorize-graph
   "store one or more node-edges constructs in memory under a namespace"
   [namespace node-edges]
   (doseq [x node-edges]
     (let [edge-keys (map name (keys (last x)))
           edge-vals (map str (vals (last x)))]
-        (prn
+        (store-pair namespace
          (vector
           (name (first x))
           (clojure.string/join
            (interleave edge-keys edge-vals)))))))
 
+(defn recall-graph
+  "recall a graph from memory"
+  [namespace]
+  (let [pairs (get-namespaced-pairs namespace)]
+    (map decode-node pairs)))

@@ -1,0 +1,11 @@
+lib
+classes
+paxdb-*.jar
+paxdb.jar
+paxdb-standalone.jar
+pom.xml
+autodoc
+.lein-failures
+doc
+.lein-deps-sum
+.lein-env
