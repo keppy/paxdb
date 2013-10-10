@@ -2,20 +2,17 @@
   (:use paxdb.graph)
   (:use paxdb.persist))
 
-(defn push-message
-  "pushes messages onto a broadcaster, using a perscribed scale for ordering"
-  [messages broadcaster scale]
-  (-> (scale messages) (broadcaster)))
-
 (defn scale
-  "scales messages based on weight. message is a bunch of map vals :name weight"
+  "scales messages based on weight. messages is a map {:name weight}"
   [messages]
   (sorted-map messages))
 
-(defmacro broadcaster
+(defn broadcast
+  "creates or finds the correct broadcast channel for these messages"
   [messages]
-  "creates or finds the correct broadcast channel for these messages")
+  (prn messages))
 
-(defn choose
-  [messages meta]
-  "chose the right broadcaster to send the message to")
+(defn push-message
+  "pushes message onto a broadcast function"
+  [message scale]
+  (-> (broadcast (scale messages))))

@@ -10,6 +10,25 @@
    :e {:d 2 :b 5 :f 4}
    :f {:e 4 :g 1}})
 
+(defn dfs
+  "http://codereview.stackexchange.com/questions/15961/
+  depth-first-search-algorithm-in-clojure"
+  [graph goal]
+  (fn search
+    [path visited]
+    (let [current (peek path)]
+      (if (= goal current)
+        [path]
+        (->> current graph keys
+             (remove visited)
+             (mapcat #(search (conj path %) (conj visited %))))))))
+
+(defn findpath
+  "Returns a lazy sequence of all directed paths from start to goal
+  within graph."
+  [graph start goal]
+  ((dfs graph goal) [start] #{start}))
+
 (def label-regex
   "regex to get the labels from a group of edges"
   (re-pattern "[1-9]|[1-9][0-9]|[1-9][0-9][0-9]"))

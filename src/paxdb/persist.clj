@@ -38,7 +38,7 @@
 (defn namespaced-key
   "creates a namespaced key out of a namespace and a string x"
   [namespace k]
-  (str namespace uni-start k))
+  (list namespace nil k))
 
 (defn strip-namespace
   "strips the namespace data from a key"
