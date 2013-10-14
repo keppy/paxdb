@@ -1,4 +1,4 @@
-(defproject paxdb "0.1.0-SNAPSHOT"
+(defproject paxdb "0.1.0"
   :description "Clojure graph data system inspired by the Paxos protocol."
   :url "http://keppy.github.com"
   :license {:name "Eclipse Public License"
