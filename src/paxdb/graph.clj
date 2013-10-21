@@ -10,6 +10,10 @@
    :e {:d 2 :b 5 :f 4}
    :f {:e 4 :g 1}})
 
+(def string-keyword-graph
+  {"james" {"jerry" 3}
+   "jerry" {"james" 3}})
+
 (defn dfs
   "http://codereview.stackexchange.com/questions/15961/
   depth-first-search-algorithm-in-clojure"
@@ -47,7 +51,9 @@
 (defn decode-node
   "get node map with node name as key and an edges hash as the val"
   [node]
-  (hash-map (strip-namespace (first node)) (decode-edges (last node))))
+  (let [k (strip-namespace (first node))
+        v (decode-edges (last node))]
+    `(~@k ~@v)))
 
 (defn memorize-graph
   "store one or more node-edges constructs in memory under a namespace"
@@ -65,4 +71,13 @@
   "recall a graph from memory"
   [namespace]
   (let [pairs (get-namespaced-pairs namespace)]
-    (map decode-node pairs)))
+    (for [pair pairs]
+      (assoc {}
+        (strip-namespace (first pair))
+        (decode-edges (last pair))))))
+
+(defn recall-node
+  "get a single node from memory and de-serialize it"
+  [namespace node]
+  (let [edges (get-pair namespace node)]
+    {node (decode-edges edges)}))

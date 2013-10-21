@@ -25,7 +25,7 @@
 
 (def db
   (l/create-db
-   (str "/tmp/clojurecharacters")
+   (str "/tmp/mapy")
    {:key-decoder bs/to-string
     :val-decoder bs/to-string}))
 
@@ -38,7 +38,7 @@
 (defn namespaced-key
   "creates a namespaced key out of a namespace and a string x"
   [namespace k]
-  (list namespace nil k))
+  (str namespace uni-start k))
 
 (defn strip-namespace
   "strips the namespace data from a key"
@@ -72,3 +72,9 @@
     (filter #(= (first (clojure.string/split (first %) delim-regex)) 
                 namespace)
             possible-pairs)))
+
+(defn get-pair
+  "get a single namespaced pair"
+  [namespace key]
+  (l/get db 
+         (namespaced-key namespace key)))
