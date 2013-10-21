@@ -33,6 +33,8 @@
   [graph start goal]
   ((dfs graph goal) [start] #{start}))
 
+(def graph (atom {}))
+
 (def label-regex
   "regex to get the labels from a group of edges"
   (re-pattern "[1-9]|[1-9][0-9]|[1-9][0-9][0-9]"))
@@ -71,10 +73,11 @@
   "recall a graph from memory"
   [namespace]
   (let [pairs (get-namespaced-pairs namespace)]
-    (for [pair pairs]
-      (assoc {}
+    (doseq [pair pairs]
+      (swap! graph assoc
         (strip-namespace (first pair))
-        (decode-edges (last pair))))))
+        (decode-edges (last pair)))))
+  graph)
 
 (defn recall-node
   "get a single node from memory and de-serialize it"
