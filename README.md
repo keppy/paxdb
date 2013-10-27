@@ -1,6 +1,6 @@
 # paxdb
 
-Graph Data System (GDS) with a leveldb persistence layer and real time data aggregation.
+Graph Data System (GDS) with a leveldb persistence layer. As name implies this is an overly ambitious project; there is no paxos implementation and there is no live data aggregation. Yet.
 Written in Clojure.
 
 ## Usage
