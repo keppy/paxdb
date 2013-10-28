@@ -7,6 +7,7 @@ Written in Clojure.
 
 - indicies - https://developer.mozilla.org/en-US/docs/IndexedDB/Using_IndexedDB#Using_an_index
 - transactions - https://developer.mozilla.org/en-US/docs/IndexedDB/Using_IndexedDB#Adding_and_removing_data
+- messaging layer
 
 ## Speculation
 - http://hyperdex.org/papers/warp.pdf
