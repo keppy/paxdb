@@ -5,11 +5,11 @@ Written in Clojure.
 
 ## Todo
 
--indicies - https://developer.mozilla.org/en-US/docs/IndexedDB/Using_IndexedDB#Using_an_index
--transactions - https://developer.mozilla.org/en-US/docs/IndexedDB/Using_IndexedDB#Adding_and_removing_data
+- indicies - https://developer.mozilla.org/en-US/docs/IndexedDB/Using_IndexedDB#Using_an_index
+- transactions - https://developer.mozilla.org/en-US/docs/IndexedDB/Using_IndexedDB#Adding_and_removing_data
 
 ## Speculation
--http://hyperdex.org/papers/warp.pdf
+- http://hyperdex.org/papers/warp.pdf
 
 ## License
 
