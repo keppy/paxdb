@@ -12,6 +12,9 @@ Written in Clojure.
 ## Speculation
 - http://hyperdex.org/papers/warp.pdf
 
+## Presentation Slides
+<a href="http://jamesdominguez.com/paxdb-tuesdaytech/#/">Tuesday Tech Talk</a>
+
 ## License
 
 Copyright © 2013
