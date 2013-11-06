@@ -9,6 +9,8 @@ Written in Clojure.
 - transactions - https://developer.mozilla.org/en-US/docs/IndexedDB/Using_IndexedDB#Adding_and_removing_data
 - messaging layer
 
+Need to parse my new notes on graph database design and come up with a set of cleanup tasks for the current code base. I will upload a 'roadmap' document once I have something more concrete--notes are currently scattered.
+
 ## Speculation
 - http://hyperdex.org/papers/warp.pdf
 
