@@ -1,0 +1,18 @@
+(ns mapy.core
+  (:require [ring.adapter.jetty :only [run-jetty]]
+            [ring.util.response :as resp]
+            [compojure.core :refer [defroutes GET POST]]
+            [compojure.route :refer [resources not-found]]
+            [compojure.handler :refer [site]]))
+
+(defroutes main-routes
+    (GET "/airship-nav-tool" []
+         (resp/redirect "/index.html"))
+    (GET "/route/:id" [id]
+         (str [id 50.2233 50.33]))
+    (POST "/point" [])
+    (resources "/")
+    (not-found "Page not found"))
+
+(def handler
+  (site main-routes))
